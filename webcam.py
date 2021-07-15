@@ -16,7 +16,7 @@ stopButton = widgets.ToggleButton(
 
 
 # view the camera
-def view(button, fn=None):
+def view(button, fn=None, fn_dict=None):
     # button is a Ipywdiget button to stop the camera
     # fn is function to apply some treatment on the image. It should return an image
     cap = cv2.VideoCapture(0)
@@ -26,7 +26,10 @@ def view(button, fn=None):
         _, frame = cap.read()
         frame = cv2.flip(frame, 1) # if your camera reverses your image
         if fn:
-            frame = fn(frame)
+            if fn_dict:
+                frame = fn(frame, fn_dict)
+            else:
+                frame = fn(frame)
         _, frame = cv2.imencode('.jpeg', frame)
         display_handle.update(Image(data=frame.tobytes()))
         if stopButton.value==True:
